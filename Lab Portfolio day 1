@@ -1,5 +1,40 @@
 Description: Creating each public and private EC2 instances.
 Resources:
+  # VPC
+  LabPortfolioVPC:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: 10.0.0.0/16
+      Tags:
+        - Key: Name
+          Value: MyVPC
+
+  # Public Subnet
+  PublicSubnet:
+    Type: AWS::EC2::Subnet
+    Properties:
+      CidrBlock: 10.0.1.0/24
+      VpcId: !Ref LabPortfolioVPC
+      MapPublicIpOnLaunch: true
+      AvailabilityZone: !Select
+        - 0
+        - !GetAZs ''
+      Tags:
+        - Key: Name
+          Value: Public Subnet
+
+  # Private Subnet
+  PrivateSubnet:
+    Type: AWS::EC2::Subnet
+    Properties:
+      CidrBlock: 10.0.2.0/24
+      VpcId: !Ref LabPortfolioVPC
+      AvailabilityZone: !Select
+        - 0
+        - !GetAZs ''
+      Tags:
+        - Key: Name
+          Value: Private Subnet
 
   #EC2 Instance in Public
   LabPortfolioPublicinstance:
@@ -9,6 +44,7 @@ Resources:
       KeyName: MyKeyPair # Replace with My key pair name
       ImageId: ami-id # Replace with My ami id
       Region: eu-west-1
+      Subnet: !Ref PublicSubnet
 
   #EC2 Instance in Private
   LabPortfolioPrivateinstance:
@@ -18,3 +54,4 @@ Resources:
       KeyName: MyKeyPair # Replace with My key pair name
       ImageId: ami-id # Replace with My ami id
       Region: eu-west-1
+      Subnet: !Ref PrivateSubnet
