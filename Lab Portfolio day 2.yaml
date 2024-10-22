@@ -36,6 +36,26 @@ Resources:
         - Key: Name
           Value: Private Subnet
 
+  PublicSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Allow SSH and HTTP from anywhere 
+      VpcId: !Ref LabPortfolioVPC
+      SecurityGroupIngress:
+        # Allow SSH (port 22) from anywhere
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: 0.0.0.0/0
+        # Allow HTTP (port 80) from anywhere
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0
+      Tags:
+        - Key: Name
+          Value: PublicSecurityGroup
+
   #EC2 Instance in Public
   LabPortfolioPublicinstance:
     Type: AWS::EC2::Instance
