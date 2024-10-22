@@ -1,4 +1,4 @@
-Description: Creating each public and private EC2 instances.
+Description: Creating each public and private EC2 instances, VPC.
 Resources:
   # VPC
   LabPortfolioVPC:
