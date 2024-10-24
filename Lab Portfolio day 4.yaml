@@ -1,4 +1,4 @@
-Description: Creating a VPC, public and private EC2 instances,Ec2 Jumpbox and Security Groups.
+Description: Creating a VPC, public and private EC2 instances, EC2 Jumpbox, Security Groups, Internet Gateway, Public Route Table, Route for Public Route Table and Associate Public Subnet with Public Route Table.
 
 Parameters:
   KeyName:
@@ -43,11 +43,42 @@ Resources:
         - Key: Name
           Value: PrivateSubnet
 
+  # Internet Gateway
+  InternetGateway:
+    Type: AWS::EC2::InternetGateway
+
+  AttachGateway:
+    Type: AWS::EC2::VPCGatewayAttachment
+    Properties:
+      VpcId: !Ref LabPortfolioVPC
+      InternetGatewayId: !Ref InternetGateway
+
+  # Public Route Table
+  PublicRouteTable:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref LabPortfolioVPC
+
+  # Route for Public Route Table
+  PublicRoute:
+    Type: AWS::EC2::Route
+    Properties:
+      RouteTableId: !Ref PublicRouteTable
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId: !Ref InternetGateway
+
+  # Associate Public Subnet with Public Route Table
+  PublicSubnetRouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref PublicSubnet
+      RouteTableId: !Ref PublicRouteTable
+
   # Public Security Group
   PublicSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
-      GroupDescription: Allow SSH and HTTP from anywhere 
+      GroupDescription: Allow SSH and HTTP from anywhere
       VpcId: !Ref LabPortfolioVPC
       SecurityGroupIngress:
         # Allow SSH (port 22) from anywhere
@@ -79,16 +110,6 @@ Resources:
       Tags:
         - Key: Name
           Value: PrivateSecurityGroup
-
-  # Internet Gateway
-  InternetGateway:
-    Type: AWS::EC2::InternetGateway
-
-  AttachGateway:
-    Type: AWS::EC2::VPCGatewayAttachment
-    Properties:
-      VpcId: !Ref LabPortfolioVPC
-      InternetGatewayId: !Ref InternetGateway
 
   # EC2 Instance in Public Subnet
   LabPortfolioPublicInstance:
