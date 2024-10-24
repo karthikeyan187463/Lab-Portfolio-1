@@ -34,7 +34,7 @@ Resources:
   PrivateSubnet:
     Type: AWS::EC2::Subnet
     Properties:
-      CidrBlock: 10.0.2.0/24
+      CidrBlock: 10.0.3.0/24
       VpcId: !Ref LabPortfolioVPC
       AvailabilityZone: !Select
         - 0
