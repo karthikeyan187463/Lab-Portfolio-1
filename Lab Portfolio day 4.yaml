@@ -121,6 +121,9 @@ Resources:
       SubnetId: !Ref PublicSubnet
       SecurityGroupIds:
         - !Ref PublicSecurityGroup
+      Tags:
+        - Key: Name
+          Value: Public 
 
   # EC2 Jumpbox in Public Subnet
   LabPortfolioJumpboxPublicInstance:
@@ -132,6 +135,9 @@ Resources:
       SubnetId: !Ref PublicSubnet
       SecurityGroupIds:
         - !Ref PublicSecurityGroup
+      Tags:
+        - Key: Name
+          Value: JumpBox
 
   # EC2 Instance in Private Subnet
   LabPortfolioPrivateInstance:
@@ -143,3 +149,22 @@ Resources:
       SubnetId: !Ref PrivateSubnet
       SecurityGroupIds:
         - !Ref PrivateSecurityGroup
+      Tags:
+        - Key: Name
+          Value: Private
+Outputs:
+  VpcId:
+    Description: ID for LabPortfolioVPC
+    Value: !Ref LabPortfolioVPC
+  InternetGateway:
+    Value: !Ref InternetGateway
+  PublicSubnet:
+    Value: !Ref PublicSubnet
+  PrivateSubnet:
+    Value: !Ref PrivateSubnet
+  PublicInstance:
+    Value: !Ref LabPortfolioPublicInstance
+  PrivateInstance:
+    Value: !Ref LabPortfolioPrivateInstance
+  Jumpbox:
+    Value: !Ref LabPortfolioJumpboxPublicInstance
